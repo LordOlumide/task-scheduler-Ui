@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:task_scheduler/constants.dart';
+import 'package:task_scheduler/screens/task_screen.dart';
 
 import '../bar gragh/bar_graph.dart';
 import '../components/rotatin_circle.dart';
@@ -76,51 +77,51 @@ class _StatisticScreenState extends State<StatisticScreen>
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: kprimaryColor,
-      appBar: AppBar(
-        backgroundColor: kprimaryColor,
-        elevation: 0,
-        leading: GestureDetector(
-            onTap: popOff,
-            child: Icon(
-              Icons.arrow_back_ios_new_outlined,
-              color: ksecondaryColor,
-            )),
-        title: Text(
-          'Statistics',
-          style: TextStyle(color: ksecondaryColor, fontWeight: FontWeight.w700),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(7.0),
-            child: Container(
-              height: 30,
-              width: SizeConfig.screenWidth * 0.3,
-              decoration: BoxDecoration(
-                  border: Border.all(color: ksecondaryColor),
-                  color: kprimaryColor,
-                  borderRadius: BorderRadius.circular(30)),
-              // child here
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    'Month',
-                    style: TextStyle(
-                        color: ksecondaryColor,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  Icon(
-                    Icons.expand_more,
-                    color: ksecondaryColor,
-                    size: 35,
-                  )
-                ],
+        appBar: AppBar(
+          backgroundColor: kprimaryColor,
+          elevation: 0,
+          leading: GestureDetector(
+              onTap: popOff,
+              child: Icon(
+                Icons.arrow_back_ios_new_outlined,
+                color: ksecondaryColor,
+              )),
+          title: Text(
+            'Statistics',
+            style: TextStyle(color: ksecondaryColor, fontWeight: FontWeight.w700),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(7.0),
+              child: Container(
+                height: 30,
+                width: SizeConfig.screenWidth * 0.3,
+                decoration: BoxDecoration(
+                    border: Border.all(color: ksecondaryColor),
+                    color: kprimaryColor,
+                    borderRadius: BorderRadius.circular(30)),
+                // child here
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      'Month',
+                      style: TextStyle(
+                          color: ksecondaryColor,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    Icon(
+                      Icons.expand_more,
+                      color: ksecondaryColor,
+                      size: 35,
+                    )
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
-      ),
+            )
+          ],
+        ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -128,48 +129,55 @@ class _StatisticScreenState extends State<StatisticScreen>
             height: 50,
           ),
           // big circle
-          Stack(
-            children: [
-              RotatingCircle(circleAnimation: circleAnimation),
-              Positioned(
-                left: 80,
-                bottom: 100,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: SizedBox(
-                        height: 140,
-                        width: 140,
-                        child: SlideTransition(
-                          position: offsetNumber,
-                          child: Text(
-                            '34',
-                            style: TextStyle(
-                                color: kwhiteColor,
-                                fontSize: 120,
-                                fontWeight: FontWeight.w900),
+          GestureDetector(
+            onTap: ()=> null,
+            // Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //               builder: (context) => TaskScreen())),
+            child: Stack(
+              children: [
+                RotatingCircle(circleAnimation: circleAnimation),
+                Positioned(
+                  left: 80,
+                  bottom: 100,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SizedBox(
+                          height: 140,
+                          width: 140,
+                          child: SlideTransition(
+                            position: offsetNumber,
+                            child: Text(
+                              '34',
+                              style: TextStyle(
+                                  color: kwhiteColor,
+                                  fontSize: 120,
+                                  fontWeight: FontWeight.w900),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    // Text(
-                    //   '34',
-                    //   style: TextStyle(
-                    //       color: kwhiteColor,
-                    //       fontSize: 140,
-                    //       fontWeight: FontWeight.bold),
-                    // ),
-                    ksmallSizedbox,
-                    Text(
-                      'Completed task',
-                      style: TextStyle(color: kwhiteColor, fontSize: 15),
-                    ),
-                  ],
+                      // Text(
+                      //   '34',
+                      //   style: TextStyle(
+                      //       color: kwhiteColor,
+                      //       fontSize: 140,
+                      //       fontWeight: FontWeight.bold),
+                      // ),
+                      ksmallSizedbox,
+                      Text(
+                        'Completed task',
+                        style: TextStyle(color: kwhiteColor, fontSize: 15),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           kbigSizedbox,
           Container(

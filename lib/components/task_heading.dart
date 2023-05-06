@@ -6,17 +6,18 @@ class TaskHeading extends StatelessWidget {
   
   const TaskHeading({
     super.key,
-    required this.leadingTextColor, required this.traillingIconColor,
+    required this.leadingTextColor, required this.traillingIconColor, required this.headingName,
   });
 
     final Color leadingTextColor;
     final Color traillingIconColor;
+    final String headingName;
     
   @override
   Widget build(BuildContext context) {
     return ListTile(
         leading: Text(
-          'Priority tasks',
+          headingName,
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w600,

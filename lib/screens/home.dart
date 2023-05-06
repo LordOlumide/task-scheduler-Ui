@@ -2,14 +2,23 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:task_scheduler/constants.dart';
+import 'package:task_scheduler/model/task_item.dart';
+import 'package:task_scheduler/provider/task_provider.dart';
 import 'package:task_scheduler/screens/statistics.dart';
 import 'dart:math' as math;
 import 'package:page_transition/page_transition.dart';
+import 'package:task_scheduler/screens/task_screen.dart';
+import '../components/add_task_circle.dart';
 import '../components/task_card.dart';
 import '../components/task_container.dart';
 import '../components/task_heading.dart';
 import '../size_config.dart';
+import 'package:task_scheduler/model/subtask_item.dart';
+import '../model/subtask_list.dart';
+import '../provider/subtask_provider.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
@@ -28,6 +37,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late Animation<Offset> offsetFirstContainer;
   late Animation<Offset> offsetSecContainer;
   // Animation sizeAnimation;
+
+  final _Descriptioncontroller = TextEditingController();
+  final _tasknamecontroller = TextEditingController();
+
+  // void addTask() {
+  //   setState(() {
+  //     todoList.add(TodoItem(_controller.text, '', false));
+  //     _controller.clear();
+  //     Navigator.of(context).pop();
+  //   });
+  // }
 
   @override
   void initState() {
@@ -73,6 +93,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     // Calculate the size of the widget based on the screen width
     final double widgetWidth = SizeConfig.screenWidth * 0.8;
+    final tasksProvider = Provider.of<TaskProvider>(context);
+    final tasks = tasksProvider.tasks;
+    final subtasksProvider = Provider.of<SubTaskProvider>(context);
+    final subtasks = subtasksProvider.subtasks;
 
     return Scaffold(
       backgroundColor: ksecondaryColor,
@@ -124,11 +148,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               padding: const EdgeInsets.only(left: 15.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(context, PageTransition(
-                    type: PageTransitionType.scale,
-                    alignment: Alignment.center, 
-                    duration: Duration(milliseconds: 700),
-                    child: StatisticScreen()));
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.scale,
+                          alignment: Alignment.center,
+                          duration: Duration(milliseconds: 700),
+                          child: StatisticScreen()));
 
                   // Navigator.push(
                   //     context,
@@ -200,17 +226,132 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    Addtaskcircle(
-                      animation: offsetFirstContainer,
-                      icon: Icon(
-                        Icons.add,
-                        color: kwhiteColor,
+                    GestureDetector(
+                      onTap: () {
+                        //Show modal sheet
+
+                        showModalBottomSheet(
+                          elevation: 90,
+                          backgroundColor: ktertiaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          context: context,
+                          builder: (context) {
+                            return Column(
+                              children: [
+                                kbigSizedbox,
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: TextField(
+                                    style: TextStyle(
+                                      color: kwhiteColor,
+                                    ),
+                                    controller: _tasknamecontroller,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      hintText: 'Add a new task',
+                                      hintStyle: TextStyle(
+                                        color: kwhiteColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: TextField(
+                                    style: TextStyle(
+                                      color: kwhiteColor,
+                                    ),
+                                    controller: _Descriptioncontroller,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      hintText: 'Add a Description',
+                                      hintStyle: TextStyle(
+                                        color: kwhiteColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        tasksProvider.addTask(
+                                            // Task item
+                                            TaskItem(
+                                                subTasks: [],
+                                                taskName:
+                                                    _tasknamecontroller.text,
+                                                description:
+                                                    _Descriptioncontroller.text,
+                                                timeAdded: DateTime.now()));
+                                        Navigator.pop(context);
+                                        _Descriptioncontroller.clear();
+                                        _tasknamecontroller.clear();
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        width: 90,
+                                        decoration: BoxDecoration(
+                                            color: kprimaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                          child: Text(
+                                            'Add Task',
+                                            style: TextStyle(
+                                                color: ksecondaryColor,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        _Descriptioncontroller.clear();
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        width: 90,
+                                        decoration: BoxDecoration(
+                                            color: kprimaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                          child: Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                                color: ksecondaryColor,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Addtaskcircle(
+                        animation: offsetFirstContainer,
+                        icon: Icon(
+                          Icons.add,
+                          color: kwhiteColor,
+                        ),
+                        circleText: Text(
+                          "Add task",
+                          style: TextStyle(color: kwhiteColor),
+                        ),
+                        circleColor: ktertiaryColor,
                       ),
-                      circleText: Text(
-                        "Add task",
-                        style: TextStyle(color: kwhiteColor),
-                      ),
-                      circleColor: ktertiaryColor,
                     ),
                     Addtaskcircle(
                       animation: offsetSecContainer,
@@ -235,54 +376,40 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               taskContainerColor: kwhiteColor,
               children: [
                 TaskHeading(
+                  headingName: 'Priorities',
                   leadingTextColor: ksecondaryColor,
                   traillingIconColor: ksecondaryColor,
                 ),
-                TaskCard(
-                  taskName: 'Design review',
-                  cardcolor: ksecondaryColor,
-                ),
-                ksmallSizedbox,
-                TaskCard(taskName: 'Interview', cardcolor: Colors.grey),
-                TaskCard(taskName: 'finish the chapter', cardcolor: Colors.grey)
+                ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: tasks.length,
+                    itemBuilder: (context, index) {
+                      Color cardColor =
+                          index == 0 ? ksecondaryColor : Colors.grey;
+                      String formattedDate =
+                          DateFormat.yMd().format(tasks[index].timeAdded);
+                      return Center(
+                        child: TaskCard(
+                          taskName: tasks[index].description,
+                          cardcolor: cardColor,
+                          numOfSubtacks: tasks[index].subTasks.length,
+                          timeAdded: formattedDate,
+                          ontap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TaskScreen(
+                                    taskName: tasks[index].taskName,
+                                    subtasks: subtasks,
+                                    description: tasks[index].description,
+                                  ),
+                                ));
+                          },
+                        ),
+                      );
+                    })
               ],
             )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Addtaskcircle extends StatelessWidget {
-  final Icon icon;
-  final Text circleText;
-  final Color circleColor;
-  final Animation<Offset> animation;
-  const Addtaskcircle({
-    super.key,
-    required this.icon,
-    required this.circleText,
-    required this.circleColor,
-    required this.animation,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SlideTransition(
-      position: animation,
-      child: Container(
-        height: 110,
-        width: 110,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: circleColor,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            icon,
-            circleText,
           ],
         ),
       ),
