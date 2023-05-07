@@ -3,18 +3,17 @@ import 'package:task_scheduler/model/subtask_item.dart';
 class TaskItem {
   String taskName;
   String description;
-  DateTime timeAdded;
-  int taskDone;
-  List<SubTaskItem> subTasks;
+  DateTime timeLastModified;
 
-  TaskItem(
-      {this.taskName = '',
-      this.description = '',
-      required this.timeAdded,
-      this.taskDone = 0,
-      required this.subTasks});
+  final DateTime timeCreated = DateTime.now();
+  final List<SubTaskItem> subTasks = [];
 
-  // void toggleDone() {
-  //   isDone = !isDone;
-  // }
+  TaskItem({
+    required this.taskName,
+    this.description = '',
+    required this.timeLastModified,
+  });
+
+  int get tasksDone =>
+      subTasks.where((subTask) => subTask.isDone == true).length;
 }

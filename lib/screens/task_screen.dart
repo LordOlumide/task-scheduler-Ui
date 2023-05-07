@@ -11,19 +11,15 @@ import '../components/task_card.dart';
 import '../components/task_container.dart';
 import '../components/task_heading.dart';
 import '../constants.dart';
-import '../provider/subtask_provider.dart';
 import '../size_config.dart';
 
 class TaskScreen extends StatefulWidget {
-  final String taskName;
-  final List<SubTaskItem> subtasks;
-  final String description;
+  final int taskIndex;
 
-  const TaskScreen(
-      {super.key,
-      required this.taskName,
-      required this.subtasks,
-      required this.description});
+  const TaskScreen({
+    super.key,
+    required this.taskIndex,
+  });
 
   @override
   State<TaskScreen> createState() => _TaskScreenState();
@@ -33,17 +29,8 @@ class _TaskScreenState extends State<TaskScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
-  final _subTaskDescriptioncontroller = TextEditingController();
-  final _subTaskcontroller = TextEditingController();
-
-  // void addSubTask(int index, TodoItem todoItem) {
-  //   setState(() {
-  //     todoList[index] = todoItem;
-  //     // todoList.add(TodoItem('', _subTaskcontroller.text, false));
-  //     _subTaskcontroller.clear();
-  //     Navigator.of(context).pop();
-  //   });
-  // }
+  final _subTaskDescriptionController = TextEditingController();
+  final _subTaskController = TextEditingController();
 
   @override
   void initState() {
@@ -60,12 +47,7 @@ class _TaskScreenState extends State<TaskScreen>
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-
-    final subtasksProvider = Provider.of<SubTaskProvider>(context);
-    final subtasks = subtasksProvider.subtasks;
-
     final tasksProvider = Provider.of<TaskProvider>(context);
-    final tasks = tasksProvider.tasks;
 
     return Scaffold(
       backgroundColor: ksecondaryColor,
@@ -124,7 +106,7 @@ class _TaskScreenState extends State<TaskScreen>
                     Padding(
                       padding: const EdgeInsets.all(30.0),
                       child: TextField(
-                        controller: _subTaskcontroller,
+                        controller: _subTaskController,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Add a new description',
@@ -134,7 +116,7 @@ class _TaskScreenState extends State<TaskScreen>
                     Padding(
                       padding: const EdgeInsets.all(30.0),
                       child: TextField(
-                        controller: _subTaskDescriptioncontroller,
+                        controller: _subTaskDescriptionController,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Add a sub task',
@@ -146,15 +128,17 @@ class _TaskScreenState extends State<TaskScreen>
                       children: [
                         InkWell(
                           onTap: () {
-                            //  tasks[int].description
-                            subtasksProvider.addSubTask(SubTaskItem(
-                                description: _subTaskDescriptioncontroller.text,
-                                subText: _subTaskcontroller.text));
-                            Provider.of<SubTaskProvider>(context,
-                                listen: false);
+                            tasksProvider.addSubTaskToTask(
+                                taskIndex: widget.taskIndex,
+                                subTask: SubTaskItem(
+                                  subTaskName:
+                                      _subTaskDescriptionController.text,
+                                  subText: _subTaskController.text,
+                                  timeLastModified: DateTime.now(),
+                                ));
                             Navigator.pop(context);
-                            _subTaskcontroller.clear();
-                            _subTaskDescriptioncontroller.clear();
+                            _subTaskController.clear();
+                            _subTaskDescriptionController.clear();
                           },
                           child: Container(
                             height: 50,
@@ -164,7 +148,7 @@ class _TaskScreenState extends State<TaskScreen>
                                 borderRadius: BorderRadius.circular(10)),
                             child: Center(
                               child: Text(
-                                'Add Task',
+                                'Add Sub-Task',
                                 style: TextStyle(
                                     color: ksecondaryColor,
                                     fontSize: 15,
@@ -175,14 +159,9 @@ class _TaskScreenState extends State<TaskScreen>
                         ),
                         InkWell(
                           onTap: () {
-                            subtasksProvider.addSubTask(SubTaskItem(
-                                description: _subTaskDescriptioncontroller.text,
-                                subText: _subTaskcontroller.text));
-                            Provider.of<SubTaskProvider>(context,
-                                listen: false);
                             Navigator.pop(context);
-                            _subTaskcontroller.clear();
-                            _subTaskDescriptioncontroller.clear();
+                            _subTaskController.clear();
+                            _subTaskDescriptionController.clear();
                           },
                           child: Container(
                             height: 50,
@@ -216,7 +195,7 @@ class _TaskScreenState extends State<TaskScreen>
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Text(
-                widget.taskName,
+                tasksProvider.tasks[widget.taskIndex].taskName,
                 style: TextStyle(color: kwhiteColor, fontSize: 30),
               ),
             ),
@@ -228,7 +207,8 @@ class _TaskScreenState extends State<TaskScreen>
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Text(
-                '3/15 subtask done',
+                '${tasksProvider.noOfCompletedSubTasksInTask(taskIndex: widget.taskIndex)}/'
+                '${tasksProvider.noOfSubTasksInTask(taskIndex: widget.taskIndex)} subtask done',
                 style: TextStyle(color: kwhiteColor, fontSize: 19),
               ),
             ),
@@ -269,7 +249,7 @@ class _TaskScreenState extends State<TaskScreen>
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Text(
-                widget.description,
+                tasksProvider.tasks[widget.taskIndex].description,
                 style: TextStyle(
                   color: kwhiteColor,
                 ),
@@ -289,28 +269,32 @@ class _TaskScreenState extends State<TaskScreen>
                 ),
                 ListView.builder(
                     shrinkWrap: true,
-                    itemCount: widget.subtasks.length,
+                    itemCount:
+                        tasksProvider.tasks[widget.taskIndex].subTasks.length,
                     itemBuilder: ((context, index) {
-                      print(subtasks.length);
-                      final subtask = widget.subtasks[index];
-                      return Consumer<SubTaskProvider>(
-                        builder: (context, subTaskProvider, child) =>
-                            SubTaskCard(
-                          subTaskName: subtask.description,
-                          subTaskDetails: subtask.subText,
-                          taskCompleted: subtask.isDone,
-                          ontap: () {
-                            setState(() {
-                              subtasks[index].isDone = !subtasks[index].isDone;
-                            });
-                          },
-                          deleteFunction: (BuildContext) {
-                            subtasksProvider.deleteSubTask(index);
-                          },
-                          // saveSubTask: () {
-                          //   Null;
-                          // },
-                        ),
+                      print(tasksProvider
+                          .tasks[widget.taskIndex].subTasks.length);
+                      final SubTaskItem subTask =
+                          tasksProvider.tasks[widget.taskIndex].subTasks[index];
+                      return SubTaskCard(
+                        subTaskName: subTask.subTaskName,
+                        subTaskDetails: subTask.subText,
+                        taskCompleted: subTask.isDone,
+                        ontap: () {
+                          tasksProvider.toggleSubTaskStatusInTask(
+                            taskIndex: widget.taskIndex,
+                            subTaskIndex: index,
+                          );
+                        },
+                        deleteFunction: (context) {
+                          tasksProvider.deleteSubTaskInTask(
+                            taskIndex: widget.taskIndex,
+                            subTaskIndex: index,
+                          );
+                        },
+                        // saveSubTask: () {
+                        //   Null;
+                        // },
                       );
                     }))
               ],

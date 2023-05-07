@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:task_scheduler/constants.dart';
 import 'package:task_scheduler/model/task_item.dart';
@@ -15,9 +14,6 @@ import '../components/task_card.dart';
 import '../components/task_container.dart';
 import '../components/task_heading.dart';
 import '../size_config.dart';
-import 'package:task_scheduler/model/subtask_item.dart';
-import '../model/subtask_list.dart';
-import '../provider/subtask_provider.dart';
 import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,14 +36,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   final _Descriptioncontroller = TextEditingController();
   final _tasknamecontroller = TextEditingController();
-
-  // void addTask() {
-  //   setState(() {
-  //     todoList.add(TodoItem(_controller.text, '', false));
-  //     _controller.clear();
-  //     Navigator.of(context).pop();
-  //   });
-  // }
 
   @override
   void initState() {
@@ -95,8 +83,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final double widgetWidth = SizeConfig.screenWidth * 0.8;
     final tasksProvider = Provider.of<TaskProvider>(context);
     final tasks = tasksProvider.tasks;
-    final subtasksProvider = Provider.of<SubTaskProvider>(context);
-    final subtasks = subtasksProvider.subtasks;
 
     return Scaffold(
       backgroundColor: ksecondaryColor,
@@ -282,12 +268,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         tasksProvider.addTask(
                                             // Task item
                                             TaskItem(
-                                                subTasks: [],
                                                 taskName:
                                                     _tasknamecontroller.text,
                                                 description:
                                                     _Descriptioncontroller.text,
-                                                timeAdded: DateTime.now()));
+                                                timeLastModified:
+                                                    DateTime.now()));
                                         Navigator.pop(context);
                                         _Descriptioncontroller.clear();
                                         _tasknamecontroller.clear();
@@ -386,8 +372,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     itemBuilder: (context, index) {
                       Color cardColor =
                           index == 0 ? ksecondaryColor : Colors.grey;
-                      String formattedDate =
-                          DateFormat.yMd().format(tasks[index].timeAdded);
+                      String formattedDate = DateFormat.yMd()
+                          .format(tasks[index].timeLastModified);
                       return Center(
                         child: TaskCard(
                           taskName: tasks[index].description,
@@ -399,9 +385,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => TaskScreen(
-                                    taskName: tasks[index].taskName,
-                                    subtasks: subtasks,
-                                    description: tasks[index].description,
+                                    taskIndex: index,
                                   ),
                                 ));
                           },

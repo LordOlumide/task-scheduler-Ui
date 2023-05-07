@@ -1,48 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:task_scheduler/model/subtask_item.dart';
-import 'package:task_scheduler/model/subtask_list.dart';
 import 'package:task_scheduler/model/task_item.dart';
-import 'package:task_scheduler/model/task_list.dart';
-
-
 
 class TaskProvider extends ChangeNotifier {
-  Tasks _tasks = Tasks();
+  final List<TaskItem> _tasks = [];
 
-  List<TaskItem> get tasks => _tasks.task;
-  
+  List<TaskItem> get tasks => _tasks;
 
+  int noOfCompletedSubTasksInTask({required int taskIndex}) {
+    return _tasks[taskIndex]
+        .subTasks
+        .where((element) => element.isDone == true)
+        .length;
+  }
+
+  int noOfSubTasksInTask({required int taskIndex}) {
+    return _tasks[taskIndex].subTasks.length;
+  }
+
+  // This function will initialize the database from local or remote storage.
+  void initialize() {}
+
+  // Add functions
   void addTask(TaskItem task) {
-    _tasks.addTask(task);
+    _tasks.add(task);
     notifyListeners();
   }
 
-  void updateTask(TaskItem task, int index) {
-    _tasks.updateTask(task, index);
+  void addSubTaskToTask({
+    required int taskIndex,
+    required SubTaskItem subTask,
+  }) {
+    _tasks[taskIndex].subTasks.add(subTask);
+    _tasks[taskIndex].timeLastModified = DateTime.now();
     notifyListeners();
   }
 
-  void deleteTask(int index) {
-    _tasks.deleteTask(index);
+  // Toggle functions
+  void toggleSubTaskStatusInTask({
+    required int taskIndex,
+    required int subTaskIndex,
+  }) {
+    _tasks[taskIndex].subTasks[subTaskIndex].toggleDoneStatus();
+    _tasks[taskIndex].timeLastModified = DateTime.now();
     notifyListeners();
   }
 
-  
+  // Edit functions
+  void editTask({
+    required int taskIndex,
+    required TaskItem newTask,
+  }) {
+    _tasks[taskIndex].taskName = newTask.taskName;
+    _tasks[taskIndex].description = newTask.description;
+    _tasks[taskIndex].timeLastModified = DateTime.now();
+    notifyListeners();
+  }
 
-  // List<SubTaskItem> get subtasks => _subtasks.task;
+  void editSubTaskInTask({
+    required int taskIndex,
+    required int subTaskIndex,
+    required SubTaskItem newSubTask,
+  }) {
+    _tasks[taskIndex].subTasks[subTaskIndex].updateSubTask(newSubTask);
+    _tasks[taskIndex].timeLastModified = DateTime.now();
+    notifyListeners();
+  }
 
-  // void addSubTask(SubTaskItem subtask) {
-  //   _subtasks.addTask(subtask);
-  //   notifyListeners();
-  // }
+  // Delete functions
+  void deleteTask(int taskIndex) {
+    _tasks.removeAt(taskIndex);
+    notifyListeners();
+  }
 
-  // void updateSubTask(SubTaskItem subtask, int index) {
-  //   _subtasks.updateTask(subtask, index);
-  //   notifyListeners();
-  // }
-
-  // void deleteSubTask(int index) {
-  //   _subtasks.deleteTask(index);
-  //   notifyListeners();
-  // }
+  void deleteSubTaskInTask({
+    required int taskIndex,
+    required int subTaskIndex,
+  }) {
+    _tasks[taskIndex].subTasks.removeAt(subTaskIndex);
+    _tasks[taskIndex].timeLastModified = DateTime.now();
+    notifyListeners();
+  }
 }
