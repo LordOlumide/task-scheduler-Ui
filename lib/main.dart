@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           fontFamily: GoogleFonts.encodeSans().fontFamily,
           primarySwatch: Colors.blue,
+          hintColor: Colors.white,
         ),
         debugShowCheckedModeBanner: false,
         home: HomeScreen(),

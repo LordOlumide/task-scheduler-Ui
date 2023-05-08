@@ -223,105 +223,140 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.circular(30),
                           ),
                           context: context,
+                          isScrollControlled: true,
                           builder: (context) {
-                            return Column(
-                              children: [
-                                kbigSizedbox,
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: TextField(
-                                    style: TextStyle(
-                                      color: kwhiteColor,
-                                    ),
-                                    controller: _tasknamecontroller,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      hintText: 'Add a new task',
-                                      hintStyle: TextStyle(
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  kbigSizedbox,
+                                  Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: TextField(
+                                      style: TextStyle(
                                         color: kwhiteColor,
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: TextField(
-                                    style: TextStyle(
-                                      color: kwhiteColor,
-                                    ),
-                                    controller: _Descriptioncontroller,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      hintText: 'Add a Description',
-                                      hintStyle: TextStyle(
-                                        color: kwhiteColor,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        tasksProvider.addTask(
-                                            // Task item
-                                            TaskItem(
-                                                taskName:
-                                                    _tasknamecontroller.text,
-                                                description:
-                                                    _Descriptioncontroller.text,
-                                                timeLastModified:
-                                                    DateTime.now()));
-                                        Navigator.pop(context);
-                                        _Descriptioncontroller.clear();
-                                        _tasknamecontroller.clear();
-                                      },
-                                      child: Container(
-                                        height: 50,
-                                        width: 90,
-                                        decoration: BoxDecoration(
-                                            color: kprimaryColor,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Center(
-                                          child: Text(
-                                            'Add Task',
-                                            style: TextStyle(
-                                                color: ksecondaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w700),
-                                          ),
+                                      controller: _tasknamecontroller,
+                                      decoration: InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                           color: kwhiteColor),
+                                        ),
+                                        border: OutlineInputBorder(),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5.0)),
+                                            borderSide:
+                                                BorderSide(
+                                                  width: 3,
+                                                  color: kprimaryColor)
+                                                  ),
+                                        hintText: 'Add a new task',
+                                        hintStyle: TextStyle(
+                                          color: kwhiteColor,
                                         ),
                                       ),
                                     ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        _Descriptioncontroller.clear();
-                                      },
-                                      child: Container(
-                                        height: 50,
-                                        width: 90,
-                                        decoration: BoxDecoration(
-                                            color: kprimaryColor,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Center(
-                                          child: Text(
-                                            'Cancel',
-                                            style: TextStyle(
-                                                color: ksecondaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w700),
-                                          ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: TextField(
+                                      style: TextStyle(
+                                        color: kwhiteColor,
+                                      ),
+                                      controller: _Descriptioncontroller,
+                                      decoration:InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                           color: kwhiteColor),
+                                        ),
+                                        border: OutlineInputBorder(),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5.0)),
+                                            borderSide:
+                                                BorderSide(
+                                                  width: 3,
+                                                  color: kprimaryColor)
+                                                  ),
+                                        hintText: 'Add Description',
+                                        hintStyle: TextStyle(
+                                          color: kwhiteColor,
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          tasksProvider.addTask(
+                                              // Task item
+                                              TaskItem(
+                                                  taskName:
+                                                      _tasknamecontroller.text,
+                                                  description:
+                                                      _Descriptioncontroller
+                                                          .text,
+                                                  timeLastModified:
+                                                      DateTime.now()));
+                                          Navigator.pop(context);
+                                          _Descriptioncontroller.clear();
+                                          _tasknamecontroller.clear();
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          width: 90,
+                                          decoration: BoxDecoration(
+                                              color: kprimaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Center(
+                                            child: Text(
+                                              'Add Task',
+                                              style: TextStyle(
+                                                  color: ksecondaryColor,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                          _Descriptioncontroller.clear();
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          width: 90,
+                                          decoration: BoxDecoration(
+                                              color: kprimaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Center(
+                                            child: Text(
+                                              'Cancel',
+                                              style: TextStyle(
+                                                  color: ksecondaryColor,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  )
+                                ],
+                              ),
                             );
                           },
                         );
