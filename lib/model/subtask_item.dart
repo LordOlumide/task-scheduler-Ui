@@ -1,13 +1,23 @@
 class SubTaskItem {
-  String description;
+  String subTaskName;
   String subText;
   bool isDone;
-  // DateTime timeAdded ;
-  
+  DateTime timeLastModified;
 
-  SubTaskItem({this.description = '', this.subText = '', this.isDone = false,});
+  SubTaskItem({
+    this.subTaskName = '',
+    this.subText = '',
+    this.isDone = false,
+    required this.timeLastModified,
+  });
 
-  void toggleDone() {
+  void toggleDoneStatus() {
     isDone = !isDone;
+  }
+
+  void updateSubTask(SubTaskItem newSubTask) {
+    subTaskName = newSubTask.subTaskName;
+    subText = newSubTask.subText;
+    timeLastModified = DateTime.now();
   }
 }
