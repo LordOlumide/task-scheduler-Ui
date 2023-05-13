@@ -2,7 +2,7 @@
 
 A task scheduler inspired by [porrwell](https://dribbble.com/shots/20856723-Task-Manager-Mobile-IOS-App)
 
-The task scheduler app has three screens
+The task scheduler app built with the provider package for state management has three screens
 📄the main screen with a task list
 
 📊the statistics screen
