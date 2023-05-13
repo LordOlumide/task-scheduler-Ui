@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:task_scheduler/components/custom_FAB.dart';
 import 'package:task_scheduler/model/subtask_item.dart';
 import 'package:task_scheduler/model/task_item.dart';
 import 'package:task_scheduler/provider/task_provider.dart';
@@ -28,6 +29,7 @@ class TaskScreen extends StatefulWidget {
 class _TaskScreenState extends State<TaskScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  late Animation<Offset> _animateContainer;
 
   final _subTaskDescriptionController = TextEditingController();
   final _subTaskController = TextEditingController();
@@ -35,7 +37,14 @@ class _TaskScreenState extends State<TaskScreen>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 600),
+    );
+    _animateContainer =
+        Tween<Offset>(begin: Offset(00, 2.0), end: Offset(00, 00))
+            .animate(_controller);
+    _controller.forward();
   }
 
   @override
@@ -90,145 +99,12 @@ class _TaskScreenState extends State<TaskScreen>
       ),
 
       //Floating Action Button
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: ktertiaryColor,
-          child: Icon(
-            Icons.add,
-            color: kwhiteColor,
-          ),
-          onPressed: () {
-            showModalBottomSheet(
-              backgroundColor: ktertiaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              context: context,
-              isScrollControlled: true,
-              builder: (context) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(30.0),
-                        child: TextField(
-                          controller: _subTaskController,
-                          decoration:InputDecoration(
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                           color: kwhiteColor),
-                                        ),
-                                        border: OutlineInputBorder(),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0)),
-                                            borderSide:
-                                                BorderSide(
-                                                  width: 3,
-                                                  color: kprimaryColor)
-                                                  ),
-                                        hintText: '',
-                                        hintStyle: TextStyle(
-                                          color: kwhiteColor,
-                                        ),
-                                      ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(30.0),
-                        child: TextField(
-                          controller: _subTaskDescriptionController,
-                          decoration:InputDecoration(
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                           color: kwhiteColor),
-                                        ),
-                                        border: OutlineInputBorder(),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0)),
-                                            borderSide:
-                                                BorderSide(
-                                                  width: 3,
-                                                  color: kprimaryColor)
-                                                  ),
-                                        hintText: 'Add a sub task',
-                                        hintStyle: TextStyle(
-                                          color: kwhiteColor,
-                                        ),
-                                      ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              tasksProvider.addSubTaskToTask(
-                                  taskIndex: widget.taskIndex,
-                                  subTask: SubTaskItem(
-                                    subTaskName:
-                                        _subTaskDescriptionController.text,
-                                    subText: _subTaskController.text,
-                                    timeLastModified: DateTime.now(),
-                                  ));
-                              Navigator.pop(context);
-                              _subTaskController.clear();
-                              _subTaskDescriptionController.clear();
-                            },
-                            child: Container(
-                              height: 50,
-                              width: 120,
-                              decoration: BoxDecoration(
-                                  color: kprimaryColor,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Center(
-                                child: Text(
-                                  'Add Sub-Task',
-                                  style: TextStyle(
-                                      color: ksecondaryColor,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                              _subTaskController.clear();
-                              _subTaskDescriptionController.clear();
-                            },
-                            child: Container(
-                              height: 50,
-                              width: 90,
-                              decoration: BoxDecoration(
-                                  color: kprimaryColor,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Center(
-                                child: Text(
-                                  'Cancel',
-                                  style: TextStyle(
-                                      color: ksecondaryColor,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      )
-                    ],
-                  ),
-                );
-              },
-            );
-          }),
+      floatingActionButton: CustomFAB(
+          subTaskDescriptionController: _subTaskDescriptionController,
+          subTaskController: _subTaskController,
+          tasksProvider: tasksProvider,
+          widget: widget),
+
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,7 +136,8 @@ class _TaskScreenState extends State<TaskScreen>
               padding: const EdgeInsets.all(15.0),
               child: Center(
                   child: FAProgressBar(
-                backgroundColor: Colors.grey,
+                    animatedDuration: Duration(milliseconds: 1000),
+                backgroundColor: Color(0xFF6A6A6A),
                 progressColor: kprimaryColor,
                 currentValue: 70,
                 displayText: '%',
@@ -303,6 +180,7 @@ class _TaskScreenState extends State<TaskScreen>
             // animated container
             TaskContainer(
               taskContainerColor: kwhiteColor,
+              containerAnimation: _animateContainer,
               children: [
                 TaskHeading(
                   headingName: 'All subtasks',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../constants.dart';
 import '../model/subtask_item.dart';
@@ -49,6 +50,8 @@ class CustomFAB extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(30.0),
                       child: TextField(
+                        maxLength: 20,
+                        maxLengthEnforcement:  MaxLengthEnforcement.enforced,
                         style: const TextStyle(
                           color: kwhiteColor,
                         ),

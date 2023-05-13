@@ -26,7 +26,7 @@ class RotatingCircle extends StatelessWidget {
               // width: SizeConfig.screenWidth * 0.9,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: ktertiaryColor,
+                  color: ksecondaryColor,
                   width: 30,
                 ),
                 borderRadius: BorderRadius.circular(100),

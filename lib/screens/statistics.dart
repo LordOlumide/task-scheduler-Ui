@@ -182,7 +182,7 @@ class _StatisticScreenState extends State<StatisticScreen>
           kbigSizedbox,
           Container(
             height: 70,
-            width: SizeConfig.screenWidth * 0.8,
+            width: SizeConfig.screenWidth * 0.95,
             decoration: BoxDecoration(
                 color: ktertiaryColor, borderRadius: BorderRadius.circular(30)),
             child: Center(
