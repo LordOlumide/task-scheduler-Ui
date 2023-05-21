@@ -1,16 +1,19 @@
 # task_scheduler
 
-A new Flutter project.
+A task scheduler inspired by [porrwell](https://dribbble.com/shots/20856723-Task-Manager-Mobile-IOS-App)
 
-## Getting Started
+The task scheduler app built with the provider package for state management has three screens
+📄the main screen with a task list
 
-This project is a starting point for a Flutter application.
+📊the statistics screen
 
-A few resources to get you started if this is your first Flutter project:
+✔️a task screen that contains the subtasks
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+![](https://github.com/emjaycodes/task-scheduler/blob/master/taskimage.jpg)
+
+## 0utput
+![](https://github.com/emjaycodes/task-scheduler/blob/master/taskscheduler.gif)
+
+
