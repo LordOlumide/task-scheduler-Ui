@@ -10,7 +10,7 @@ class TaskProvider extends ChangeNotifier {
   int noOfCompletedSubTasksInTask({required int taskIndex}) {
     return _tasks[taskIndex]
         .subTasks
-        .where((element) => element.isDone == true)
+        .where((subTask) => subTask.isDone == true)
         .length;
   }
 

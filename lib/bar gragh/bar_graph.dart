@@ -22,22 +22,26 @@ class MyBarGraph extends StatelessWidget {
     myBarData.initializeBarData();
     return BarChart(
       BarChartData(
-      maxY: 100,
-      minY: 0,
-      // backgroundColor: ksecondaryColor,
-      gridData: FlGridData(show: false),
-      borderData: FlBorderData(show: false,),
-      titlesData: FlTitlesData(
-        show: false,
-        // topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        // leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        // rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false))
-      ),
-      barGroups:myBarData.barData
-                .map(
-                  (data) => BarChartGroupData(x: data.x,
-                  barRods: [
-                    BarChartRodData(toY: data.y,
+        maxY: 100,
+        minY: 0,
+        // backgroundColor: ksecondaryColor,
+        gridData: FlGridData(show: false),
+        borderData: FlBorderData(
+          show: false,
+        ),
+        titlesData: FlTitlesData(
+          show: false,
+          // topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          // leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          // rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false))
+        ),
+        barGroups: myBarData.barData
+            .map(
+              (data) => BarChartGroupData(
+                x: data.x,
+                barRods: [
+                  BarChartRodData(
+                    toY: data.y,
                     color: ktertiaryColor,
                     width: 18,
                     borderRadius: BorderRadius.circular(4),
@@ -45,12 +49,13 @@ class MyBarGraph extends StatelessWidget {
                       show: true,
                       toY: 100,
                       color: Colors.grey[900],
-                    )
-                    )
-                  ]
-                  ), 
-                  ).toList(),
-    ),
+                    ),
+                  )
+                ],
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }
